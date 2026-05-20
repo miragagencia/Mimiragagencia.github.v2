@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mira G — Agência de Crescimento e Tráfego</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Manrope',sans-serif;
+  background:#090909;
+  color:#EDEAE3;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── CURSOR ── */
+#cur{position:fixed;width:7px;height:7px;background:#FF6A00;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s}
+#cur-o{position:fixed;width:28px;height:28px;border:1px solid rgba(255,106,0,.35);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s,border-color .3s}
+body.hovering #cur-o{width:44px;height:44px;border-color:rgba(255,106,0,.6)}
+
+/* ── WA FLOAT ── */
+.wa{
+  position:fixed;bottom:1.75rem;right:1.75rem;z-index:800;
+  width:54px;height:54px;background:#22C55E;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;cursor:none;
+  box-shadow:0 0 0 0 rgba(34,197,94,.5);
+  animation:wap 2.5s infinite;
+  transition:transform .2s,background .2s;
+}
+.wa:hover{transform:scale(1.1);background:#16a34a}
+.wa svg{width:24px;height:24px;fill:#fff}
+@keyframes wap{0%{box-shadow:0 0 0 0 rgba(34,197,94,.45)}70%{box-shadow:0 0 0 12px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+
+/* ── NAV ── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:400;
+  height:66px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 3.5rem;
+  border-bottom:1px solid transparent;
+  transition:background .35s,border-color .35s,backdrop-filter .35s;
+}
+.nav.stuck{background:rgba(9,9,9,.9);backdrop-filter:blur(20px);border-color:#1d1d1d}
+/* Logo SVG — apenas letras, sem fundo */
+.nav-logo{text-decoration:none;display:flex;align-items:center;height:36px}
+.nav-logo svg{height:36px;width:auto;display:block}
+.nav-menu{display:flex;gap:2.2rem;list-style:none}
+.nav-menu a{font-size:.72rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#5a5550;text-decoration:none;transition:color .2s}
+.nav-menu a:hover{color:#EDEAE3}
+.nav-cta{
+  font-size:.73rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  background:#FF6A00;color:#000;border:none;
+  padding:.55rem 1.35rem;border-radius:4px;
+  cursor:none;text-decoration:none;
+  display:inline-flex;align-items:center;gap:7px;
+  transition:opacity .2s;
+}
+.nav-cta:hover{opacity:.85}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  display:grid;
+  grid-template-rows:1fr auto;
+  padding:0 3.5rem;
+  padding-top:66px;
+  position:relative;
+  overflow:hidden;
+  border-bottom:1px solid #1d1d1d;
+}
+/* Subtle grid bg */
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,106,0,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,106,0,.04) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 70% 60% at 60% 50%,black 30%,transparent 80%);
+  pointer-events:none;
+}
+/* Orange radial glow */
+.hero-glow{
+  position:absolute;right:-5%;top:20%;
+  width:55vw;height:55vw;
+  background:radial-gradient(circle,rgba(255,106,0,.09) 0%,transparent 60%);
+  border-radius:50%;pointer-events:none;
+}
+.hero-body{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:5rem 0 3rem;
+  position:relative;z-index:1;
+}
+.hero-label{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid #272727;padding:.28rem .9rem;border-radius:40px;
+  font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:#FF6A00;width:fit-content;margin-bottom:2.2rem;
+  opacity:0;animation:up .6s .1s forwards;
+}
+.hero-label-dot{width:5px;height:5px;background:#FF6A00;border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero-h1{
+  font-size:clamp(3rem,8vw,8.5rem);
+  font-weight:800;line-height:.9;letter-spacing:-.04em;
+  margin-bottom:2.5rem;
+  opacity:0;animation:up .75s .22s forwards;
+}
+.hero-h1 .dim{color:#333}
+.hero-h1 .hi{color:#FF6A00}
+.hero-foot{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;
+  opacity:0;animation:up .75s .38s forwards;
+}
+.hero-copy{
+  font-size:.97rem;color:#5a5550;line-height:1.82;
+  max-width:360px;font-weight:400;
+}
+.hero-actions{display:flex;flex-direction:column;gap:.75rem;min-width:200px}
+.btn-primary{
+  font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  background:#FF6A00;color:#000;border:none;
+  padding:.9rem 1.8rem;border-radius:4px;cursor:none;text-decoration:none;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  transition:opacity .2s,transform .15s;
+}
+.btn-primary:hover{opacity:.86;transform:translateY(-1px)}
+.btn-outline{
+  font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  background:transparent;color:#5a5550;
+  border:1px solid #272727;
+  padding:.9rem 1.8rem;border-radius:4px;cursor:none;text-decoration:none;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  transition:border-color .2s,color .2s;
+}
+.btn-outline:hover{border-color:#5a5550;color:#EDEAE3}
+/* hero bottom bar */
+.hero-stats{
+  display:flex;align-items:stretch;
+  border-top:1px solid #1d1d1d;
+  position:relative;z-index:1;
+}
+.hstat{
+  flex:1;padding:1.6rem 2rem;
+  border-right:1px solid #1d1d1d;
+}
+.hstat:last-child{border-right:none}
+.hstat-v{font-size:1.9rem;font-weight:800;letter-spacing:-.03em;line-height:1;margin-bottom:.3rem}
+.hstat-l{font-size:.67rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#3a3530}
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TICKER ── */
+.ticker{
+  overflow:hidden;border-bottom:1px solid #1d1d1d;
+  background:#0d0d0d;padding:.8rem 0;
+}
+.ticker-inner{display:flex;width:max-content;animation:tk 28s linear infinite}
+.tick-item{
+  display:flex;align-items:center;gap:1.6rem;padding:0 1.6rem;
+  font-size:.65rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:#272727;white-space:nowrap;
+}
+.tick-sep{color:#FF6A00;font-size:.9rem}
+@keyframes tk{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SECTION BASE ── */
+.section{padding:6rem 3.5rem;border-bottom:1px solid #1d1d1d}
+.section.dark{background:#0d0d0d}
+.s-tag{
+  font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:#FF6A00;display:flex;align-items:center;gap:8px;margin-bottom:1rem;
+}
+.s-tag::before{content:'';width:18px;height:1px;background:#FF6A00;flex-shrink:0}
+.s-h{
+  font-size:clamp(1.8rem,3.5vw,3.5rem);
+  font-weight:800;line-height:.96;letter-spacing:-.04em;
+}
+.s-h .dim{color:#333;display:block}
+.s-sub{font-size:.87rem;color:#5a5550;line-height:1.82;max-width:300px;font-weight:400}
+
+/* ── SERVICES ── */
+.svc-head{
+  display:grid;grid-template-columns:1fr auto;
+  align-items:end;gap:2rem;margin-bottom:3rem;
+}
+/* Carousel */
+.car-outer{overflow:hidden}
+.car-track{display:flex;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.car-item{flex-shrink:0;padding-right:1px}
+.svc-card{
+  height:100%;
+  background:#0d0d0d;border:1px solid #1d1d1d;
+  padding:2.5rem 2rem;
+  display:flex;flex-direction:column;gap:.85rem;
+  position:relative;overflow:hidden;
+  transition:border-color .25s,background .25s;
+}
+.svc-card::after{
+  content:'';position:absolute;bottom:0;left:0;
+  width:0;height:2px;background:#FF6A00;
+  transition:width .4s ease;
+}
+.svc-card:hover{background:#111;border-color:#272727}
+.svc-card:hover::after{width:100%}
+.svc-num{font-size:.58rem;font-weight:700;letter-spacing:.1em;color:#2a2520}
+.svc-icon{
+  width:38px;height:38px;border:1px solid #222;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .25s,background .25s;
+}
+.svc-card:hover .svc-icon{border-color:#FF6A00;background:rgba(255,106,0,.06)}
+.svc-icon svg{width:18px;height:18px;stroke:#5a5550;fill:none;stroke-width:1.5;transition:stroke .25s}
+.svc-card:hover .svc-icon svg{stroke:#FF6A00}
+.svc-title{font-size:.98rem;font-weight:700;letter-spacing:-.01em}
+.svc-desc{font-size:.82rem;color:#5a5550;line-height:1.72;flex:1}
+.svc-arr{
+  position:absolute;top:2rem;right:2rem;
+  font-size:1rem;color:#222;
+  transition:color .25s,transform .25s;
+}
+.svc-card:hover .svc-arr{color:#FF6A00;transform:translate(3px,-3px)}
+/* carousel nav */
+.car-nav{display:flex;align-items:center;gap:.75rem}
+.car-nbtn{
+  width:38px;height:38px;border:1px solid #222;background:transparent;
+  border-radius:4px;display:flex;align-items:center;justify-content:center;
+  cursor:none;transition:border-color .2s,background .2s;
+}
+.car-nbtn:hover{border-color:#FF6A00;background:rgba(255,106,0,.07)}
+.car-nbtn svg{width:14px;height:14px;stroke:#5a5550;fill:none;stroke-width:2;transition:stroke .2s}
+.car-nbtn:hover svg{stroke:#FF6A00}
+.car-dots2{display:flex;gap:5px}
+.cdot{width:5px;height:5px;border-radius:50%;background:#222;cursor:none;transition:background .25s,transform .25s}
+.cdot.on{background:#FF6A00;transform:scale(1.4)}
+
+/* ── PROOF STRIP ── */
+.proof{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-bottom:1px solid #1d1d1d;
+}
+.proof-item{
+  padding:3rem 3.5rem;border-right:1px solid #1d1d1d;
+  position:relative;overflow:hidden;
+  transition:background .25s;
+}
+.proof-item:last-child{border-right:none}
+.proof-item:hover{background:#0d0d0d}
+.proof-item::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:#FF6A00;transition:width .4s}
+.proof-item:hover::after{width:100%}
+.proof-v{font-size:clamp(2rem,3.5vw,3.2rem);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:.35rem}
+.proof-l{font-size:.66rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#3a3530}
+
+/* ── PILARES ACCORDION ── */
+.pillars-acc{display:flex;flex-direction:column;gap:1px;background:#1d1d1d;border:1px solid #1d1d1d}
+.acc-item{background:#090909;overflow:hidden;transition:background .25s}
+.acc-item.open{background:#0d0d0d}
+.acc-header{
+  display:flex;align-items:center;gap:2rem;
+  padding:2rem 2.5rem;cursor:none;
+  transition:padding .3s;
+}
+.acc-item.open .acc-header{padding-bottom:0}
+.acc-num{font-size:.6rem;font-weight:700;letter-spacing:.1em;color:#FF6A00;min-width:2rem}
+.acc-title{font-size:1.15rem;font-weight:700;letter-spacing:-.02em;flex:1}
+.acc-icon{
+  width:32px;height:32px;border:1px solid #272727;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:border-color .25s,background .25s,transform .35s;
+}
+.acc-item.open .acc-icon{border-color:#FF6A00;background:rgba(255,106,0,.08);transform:rotate(45deg)}
+.acc-icon svg{width:14px;height:14px;stroke:#5a5550;fill:none;stroke-width:2;transition:stroke .25s}
+.acc-item.open .acc-icon svg{stroke:#FF6A00}
+.acc-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .4s cubic-bezier(.4,0,.2,1),opacity .3s;
+  opacity:0;
+}
+.acc-item.open .acc-body{max-height:200px;opacity:1}
+.acc-content{
+  padding:1rem 2.5rem 2rem;
+  padding-left:calc(2.5rem + 2rem + 2rem);
+  display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;
+}
+.acc-desc{font-size:.87rem;color:#5a5550;line-height:1.75}
+.acc-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.65rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:#FF6A00;align-self:start;padding-top:.2rem;
+}
+.acc-tag::before{content:'';width:16px;height:1px;background:#FF6A00}
+
+/* ── PROCESS ── */
+.process{display:flex;flex-direction:column}
+.proc{
+  display:grid;grid-template-columns:3.5rem 1.4fr 1fr;
+  align-items:start;gap:2.5rem;
+  padding:2rem 0;border-bottom:1px solid #131313;
+  transition:padding .2s;
+}
+.proc:last-child{border-bottom:none}
+.proc:hover{padding-left:.75rem;padding-right:.75rem;margin:0 -.75rem}
+.proc-n{font-size:.6rem;font-weight:700;letter-spacing:.1em;color:#FF6A00;padding-top:2px}
+.proc-t{font-size:1.05rem;font-weight:700;letter-spacing:-.02em;line-height:1.2}
+.proc-d{font-size:.82rem;color:#5a5550;line-height:1.75}
+
+/* ── TESTIMONIALS ── */
+.dep-outer{overflow:hidden}
+.dep-track{display:flex;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.dep-slide{min-width:100%}
+.dep-card{
+  background:#0d0d0d;border:1px solid #1d1d1d;
+  padding:3rem 3.5rem;
+  display:grid;grid-template-columns:1.4fr 1fr;gap:4rem;align-items:center;
+}
+.dep-q{font-size:4.5rem;font-weight:800;color:#FF6A00;line-height:.65;margin-bottom:1rem}
+.dep-text{font-size:1rem;color:#5a5550;line-height:1.82;margin-bottom:2rem}
+.dep-text strong{color:#EDEAE3;font-weight:600}
+.dep-author{display:flex;align-items:center;gap:12px}
+.dep-av{
+  width:42px;height:42px;border-radius:50%;
+  background:#131313;border:1px solid #272727;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#FF6A00;flex-shrink:0;
+}
+.dep-name{font-size:.88rem;font-weight:700}
+.dep-role{font-size:.73rem;color:#3a3530;margin-top:.1rem}
+.dep-stat{
+  padding:2.5rem;background:#111;border:1px solid #1d1d1d;border-radius:6px;
+  text-align:center;
+}
+.dep-stat-v{font-size:3rem;font-weight:800;letter-spacing:-.04em;color:#FF6A00;line-height:1;margin-bottom:.35rem}
+.dep-stat-l{font-size:.72rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#3a3530}
+.dep-stat-ctx{font-size:.8rem;color:#5a5550;margin-top:.5rem;line-height:1.6}
+
+/* ── CTA SECTION ── */
+.cta-section{
+  padding:8rem 3.5rem;text-align:center;
+  position:relative;overflow:hidden;
+  border-bottom:1px solid #1d1d1d;
+}
+.cta-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 50% at 50% 100%,rgba(255,106,0,.07) 0%,transparent 65%);
+  pointer-events:none;
+}
+.cta-label{
+  font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:#FF6A00;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:1.5rem;
+}
+.cta-h{
+  font-size:clamp(2.8rem,7vw,7rem);font-weight:800;
+  line-height:.88;letter-spacing:-.05em;margin-bottom:3rem;
+}
+.cta-h .dim{color:#333;display:block}
+.cta-btns{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap}
+
+/* ── CONTACT FORM ── */
+.contact{
+  padding:6rem 3.5rem;
+  background:#0d0d0d;
+  border-bottom:1px solid #1d1d1d;
+}
+.contact-inner{
+  display:grid;grid-template-columns:1fr 1.2fr;gap:5rem;align-items:start;
+}
+.contact-title{font-size:clamp(1.8rem,2.8vw,3rem);font-weight:800;letter-spacing:-.04em;line-height:.96;margin-bottom:1.2rem}
+.contact-sub{font-size:.86rem;color:#5a5550;line-height:1.82;margin-bottom:2.5rem}
+.contact-info{display:flex;flex-direction:column;gap:.85rem}
+.ci{display:flex;align-items:center;gap:11px}
+.ci-icon{
+  width:32px;height:32px;border:1px solid #222;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.ci-icon svg{width:13px;height:13px;stroke:#FF6A00;fill:none;stroke-width:1.5}
+.ci-text{font-size:.82rem;color:#5a5550}
+/* form fields */
+.form-stack{display:flex;flex-direction:column;gap:1px;background:#1d1d1d}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#1d1d1d}
+.field{background:#090909;padding:0;transition:background .2s}
+.field:focus-within{background:rgba(255,106,0,.025)}
+.field-label{
+  display:block;padding:.8rem 1.1rem .1rem;
+  font-size:.57rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#2a2520;
+}
+.field-input,.field-select,.field-ta{
+  display:block;width:100%;background:transparent;border:none;
+  padding:.2rem 1.1rem .8rem;
+  font-family:'Manrope',sans-serif;font-size:.88rem;color:#EDEAE3;outline:none;
+}
+.field-input::placeholder,.field-ta::placeholder{color:#2a2520}
+.field-select{color:#5a5550;-webkit-appearance:none;cursor:none}
+.field-select option{background:#111}
+.field-ta{resize:none;min-height:90px}
+.form-btn{
+  background:#FF6A00;color:#000;border:none;
+  padding:1rem 1.5rem;
+  font-family:'Manrope',sans-serif;font-size:.8rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;
+  cursor:none;width:100%;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:opacity .2s;margin-top:1px;
+}
+.form-btn:hover{opacity:.87}
+.form-btn:disabled{opacity:.4;cursor:not-allowed}
+.form-success{
+  display:none;padding:2rem;background:rgba(255,106,0,.05);
+  border:1px solid rgba(255,106,0,.18);
+  text-align:center;font-weight:700;color:#FF6A00;line-height:1.7;font-size:.9rem;
+}
+
+/* ── FOOTER ── */
+.footer{
+  padding:1.6rem 3.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.footer-brand{font-size:.88rem;font-weight:800;letter-spacing:-.01em}
+.footer-brand em{color:#FF6A00;font-style:normal}
+.footer-tag{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#272727}
+.footer-tag span{color:#FF6A00}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}
+.rv.vis{opacity:1;transform:translateY(0)}
+.rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}.rv.d3{transition-delay:.3s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .nav,.hero,.section,.cta-section,.contact,.footer{padding-left:1.5rem;padding-right:1.5rem}
+  .nav-menu{display:none}
+  .hero-foot{flex-direction:column;align-items:flex-start;gap:2rem}
+  .proof{grid-template-columns:1fr 1fr}
+  .proof-item{padding:2rem 1.5rem;border-bottom:1px solid #1d1d1d}
+  .proof-item:nth-child(2){border-right:none}
+  .pillars{grid-template-columns:1fr 1fr}
+  .proc{grid-template-columns:40px 1fr;gap:1.2rem}
+  .proc-d{grid-column:2}
+  .dep-card{grid-template-columns:1fr;gap:2rem;padding:2rem}
+  .contact-inner{grid-template-columns:1fr;gap:3rem}
+  .car-item{min-width:100%!important}
+}
+@media(max-width:600px){
+  .pillars{grid-template-columns:1fr}
+  .proof{grid-template-columns:1fr}
+  .proof-item{border-right:none!important}
+  .hero-actions{width:100%}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-o"></div>
+
+<!-- WhatsApp flutuante -->
+<a class="wa" href="https://wa.me/5511999999999?text=Olá!%20Vim%20pelo%20site%20da%20Mira%20G%20e%20quero%20saber%20mais." target="_blank" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- ── NAV ── -->
+<nav class="nav" id="nav">
+  <a href="#" class="nav-logo" aria-label="Mira G">
+    <!-- Logo SVG apenas letras, sem fundo preto -->
+    <svg height="26" viewBox="0 0 370 92" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd">
+      <!-- M -->
+      <path d="M2 41L2 83 3 85 5 86 5 88 7 89 18 88 19 32 21 34 24 36 26 35 28 37 31 39 35 40 37 41 42 45 41 47 43 48 42 88 44 89 50 90 57 90 58 88 59 44 60 49 60 36 63 34 67 36 69 38 73 40 75 39 77 40 80 44 81 46 82 88 84 90 93 90 95 89 98 86 99 84 99 82 100 79 99 66 100 43 99 40 97 39 96 36 96 34 94 32 93 32 91 30 91 29 89 27 87 26 83 24 81 23 78 23 77 22 71 22 69 23 68 25 66 24 63 26 59 29 57 31 58 32 55 34 54 29 51 30 48 27 46 26 45 27 43 26 42 24 40 23 37 24 36 22 30 22 27 23 24 27 23 28 19 31 19 27 17 25 16 27 14 28 13 27 11 28 6 33 6 35 4 36 3 38 4 40Z" fill="#EDEAE3"/>
+      <!-- i (stem) -->
+      <path d="M113 26 110 27 107 26 109 26 111 28 109 83 111 84 110 85 114 89 116 88 117 90 119 90 124 87 125 85 125 81 127 81 126 79 125 74 126 26 123 23 116 23Z" fill="#EDEAE3"/>
+      <!-- i (dot) -->
+      <path d="M116 4 114 5 111 8 111 15 113 17 115 18 120 18 122 17 124 15 125 13 125 10 124 7 122 5 120 4Z" fill="#FF6A00"/>
+      <!-- r -->
+      <path d="M136 41 136 83 137 85 141 89 143 88 145 90 153 90 154 88 155 35 154 34 156 33 157 35 163 38 173 43 176 43 179 42 182 40 184 37 186 37 189 34 189 31 187 30 183 28 175 24 170 22 164 22 162 23 160 26 155 29 153 24 151 25 149 26 147 27 146 28 146 29 143 30 140 33 138 36 137 38 138 41Z" fill="#EDEAE3"/>
+      <!-- a -->
+      <path d="M209 22 209 26 211 27 214 28 220 34 221 36 221 38 223 39 224 41 224 43 226 47 228 48 227 49 231 53 231 54 233 59 234 61 235 63 237 64 238 68 241 71 240 72 242 75 243 76 242 79 239 81 238 79 236 80 233 79 227 77 223 74 221 73 219 74 218 72 214 72 210 70 209 68 207 68 203 64 205 62 205 60 206 58 207 57 212 52 215 52 218 51 220 50 219 48 214 49 213 47 211 47 208 49 206 48 204 50 202 50 200 52 198 51 193 56 194 57 191 60 192 62 190 62 190 67 192 72 193 74 196 78 195 79 197 83 202 85 204 86 206 86 210 87 211 89 215 88 215 90 223 90 225 88 229 89 233 87 234 85 235 86 242 84 243 81 248 83 249 85 251 87 257 89 261 90 269 90 270 88 269 86 267 85 266 83 265 81 266 80 264 76 261 74 261 73 260 70 258 69 257 67 258 66 256 62 253 60 253 57 251 56 250 54 250 52 248 51 247 49 248 48 246 43 245 41 243 41 242 39 239 34 235 29 233 27 232 28 230 25 228 26 227 24 225 25 224 23 221 24 219 22Z" fill="#EDEAE3"/>
+      <!-- G -->
+      <path d="M320 24 316 25 314 26 313 28 311 27 309 30 308 29 306 30 298 38 299 39 296 41 295 43 293 48 293 50 292 51 292 64 293 68 294 70 296 71 297 73 296 74 300 78 300 80 304 84 306 84 308 87 313 88 314 90 316 89 317 91 320 91 322 90 322 92 328 91 330 90 332 96 340 96 343 94 346 94 347 92 349 92 354 86 356 85 348 92 346 93 344 94 341 95 337 96 332 93 332 91 334 89 337 90 339 89 343 86 344 85 344 84 351 78 353 75 355 70 357 68 360 69 361 72 361 68 358 67 357 65 359 63 358 55 349 56 342 55 335 56 333 57 332 60 329 66 328 68 323 70 326 70 327 69 341 69 335 76 329 78 320 76 318 77 316 76 315 74 311 72 311 70 308 68 309 67 307 60 306 59 306 57 306 52 308 51 307 49 309 48 314 42 317 40 320 38 330 38 333 40 338 44 342 44 343 42 344 43 350 36 347 32 345 32 343 29 340 28 337 26 335 27 334 25 331 25 330 24Z" fill="#EDEAE3"/>
+      <!-- G orange stroke -->
+      <path d="M356 70 355 72 354 75 352 78 343 87 339 90 337 91 334 90 333 93 332 95 337 95 341 94 344 93 346 92 348 91 355 84 356 82 357 80 358 77 359 73 359 69Z" fill="#FF6A00"/>
+    </svg>
+  </a>
+  <ul class="nav-menu">
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#metodo">Método</a></li>
+    <li><a href="#processo">Processo</a></li>
+    <li><a href="#resultados">Resultados</a></li>
+  </ul>
+  <a href="https://wa.me/5511999999999?text=Olá!%20Quero%20falar%20com%20a%20Mira%20G." target="_blank" class="nav-cta">
+    Fale conosco
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-body">
+    <div class="hero-label"><span class="hero-label-dot"></span>Agência de crescimento e tráfego</div>
+    <h1 class="hero-h1">
+      Estratégia,<br>
+      <span class="dim">tráfego e</span><br>
+      performance que<br>
+      geram <span class="hi">crescimento.</span>
+    </h1>
+    <div class="hero-foot">
+      <p class="hero-copy">Unimos direção, dados e execução para transformar investimento em resultado real. Mais que tráfego — entregamos método.</p>
+      <div class="hero-actions">
+        <a href="https://wa.me/5511999999999?text=Olá!%20Vim%20pelo%20site%20e%20quero%20crescer%20meu%20negócio." target="_blank" class="btn-primary">
+          Quero crescer agora
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#servicos" class="btn-outline">
+          Ver como funciona
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-v" style="color:#FF6A00">+120</div><div class="hstat-l">Clientes atendidos</div></div>
+    <div class="hstat"><div class="hstat-v">R$200M+</div><div class="hstat-l">Em tráfego gerenciado</div></div>
+    <div class="hstat"><div class="hstat-v" style="color:#FF6A00">+35%</div><div class="hstat-l">Crescimento médio</div></div>
+    <div class="hstat"><div class="hstat-v">98%</div><div class="hstat-l">Taxa de retenção</div></div>
+  </div>
+</section>
+
+<!-- ── TICKER ── -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-inner">
+    <div class="tick-item"><span class="tick-sep">·</span>Tráfego Pago<span class="tick-sep">·</span>Growth Strategy<span class="tick-sep">·</span>Meta Ads<span class="tick-sep">·</span>Google Ads<span class="tick-sep">·</span>TikTok Ads<span class="tick-sep">·</span>Analytics & BI<span class="tick-sep">·</span>Copywriting<span class="tick-sep">·</span>Social Media<span class="tick-sep">·</span>Performance Marketing<span class="tick-sep">·</span>Consultoria Estratégica<span class="tick-sep">·</span>Escalada</div>
+    <div class="tick-item"><span class="tick-sep">·</span>Tráfego Pago<span class="tick-sep">·</span>Growth Strategy<span class="tick-sep">·</span>Meta Ads<span class="tick-sep">·</span>Google Ads<span class="tick-sep">·</span>TikTok Ads<span class="tick-sep">·</span>Analytics & BI<span class="tick-sep">·</span>Copywriting<span class="tick-sep">·</span>Social Media<span class="tick-sep">·</span>Performance Marketing<span class="tick-sep">·</span>Consultoria Estratégica<span class="tick-sep">·</span>Escalada</div>
+  </div>
+</div>
+
+<!-- ── SERVIÇOS ── -->
+<section class="section rv" id="servicos">
+  <div class="svc-head">
+    <div>
+      <div class="s-tag">O que fazemos</div>
+      <h2 class="s-h">Serviços que<br><span class="dim">geram resultado</span></h2>
+    </div>
+    <div class="car-nav">
+      <button class="car-nbtn" id="sp" aria-label="Anterior"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="car-dots2" id="sd"></div>
+      <button class="car-nbtn" id="sn" aria-label="Próximo"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
+  </div>
+  <div class="car-outer">
+    <div class="car-track" id="sT">
+      <div class="car-item"><div class="svc-card"><div class="svc-num">01</div><div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div><div class="svc-title">Tráfego Pago</div><p class="svc-desc">Campanhas no Meta Ads, Google Ads e TikTok Ads com gestão estratégica. Audiência certa, momento certo, custo ideal.</p><span class="svc-arr">↗</span></div></div>
+      <div class="car-item"><div class="svc-card"><div class="svc-num">02</div><div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M2 20l7-7 4 4 7-9"/><circle cx="21" cy="5" r="2"/></svg></div><div class="svc-title">Estratégia de Growth</div><p class="svc-desc">Análise de funil, oportunidades de escala e plano baseado em dados reais do seu negócio — sem chute.</p><span class="svc-arr">↗</span></div></div>
+      <div class="car-item"><div class="svc-card"><div class="svc-num">03</div><div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div class="svc-title">Gestão de Redes Sociais</div><p class="svc-desc">Conteúdo estratégico e posicionamento que converte seguidores em clientes reais.</p><span class="svc-arr">↗</span></div></div>
+      <div class="car-item"><div class="svc-card"><div class="svc-num">04</div><div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4z"/></svg></div><div class="svc-title">Copywriting & Criativos</div><p class="svc-desc">Textos e peças visuais focados em conversão. Do anúncio ao botão de compra.</p><span class="svc-arr">↗</span></div></div>
+      <div class="car-item"><div class="svc-card"><div class="svc-num">05</div><div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div><div class="svc-title">Analytics & BI</div><p class="svc-desc">Dashboards e relatórios que revelam onde está o crescimento — e onde está o vazamento.</p><span class="svc-arr">↗</span></div></div>
+      <div class="car-item"><div class="svc-card"><div class="svc-num">06</div><div class="svc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><div class="svc-title">Consultoria Estratégica</div><p class="svc-desc">Diagnóstico completo e roadmap de crescimento para levar seu negócio ao próximo nível.</p><span class="svc-arr">↗</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PILARES ── -->
+<section class="section dark rv" id="metodo">
+  <div style="display:grid;grid-template-columns:1fr auto;align-items:end;gap:2rem;margin-bottom:3rem">
+    <div>
+      <div class="s-tag">Nosso método</div>
+      <h2 class="s-h">O que guia<br><span class="dim">cada decisão</span></h2>
+    </div>
+    <p class="s-sub">Com método, tecnologia e visão, impulsionamos negócios para crescerem de forma consistente e escalável.</p>
+  </div>
+  <div class="pillars-acc" id="acc">
+    <div class="acc-item open">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <span class="acc-num">01</span>
+        <span class="acc-title">Direção</span>
+        <div class="acc-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+      </div>
+      <div class="acc-body">
+        <div class="acc-content">
+          <p class="acc-desc">Estratégia clara para escolhas que levam ao resultado. Não trabalhamos com achismo — cada decisão tem uma razão baseada em dados e objetivos reais do negócio.</p>
+          <span class="acc-tag">Estratégia clara</span>
+        </div>
+      </div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <span class="acc-num">02</span>
+        <span class="acc-title">Foco</span>
+        <div class="acc-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+      </div>
+      <div class="acc-body">
+        <div class="acc-content">
+          <p class="acc-desc">Prioridades certas, execução disciplinada e impacto real nos números que importam. Sem dispersão, sem energia desperdiçada em ações que não movem o ponteiro.</p>
+          <span class="acc-tag">Execução disciplinada</span>
+        </div>
+      </div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <span class="acc-num">03</span>
+        <span class="acc-title">Precisão</span>
+        <div class="acc-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+      </div>
+      <div class="acc-body">
+        <div class="acc-content">
+          <p class="acc-desc">Decisões baseadas em dados, análise e inteligência de mercado. Cada otimização é calculada, mensurável e auditável — você sabe exatamente o que está acontecendo.</p>
+          <span class="acc-tag">Decisões por dados</span>
+        </div>
+      </div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <span class="acc-num">04</span>
+        <span class="acc-title">Crescimento</span>
+        <div class="acc-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+      </div>
+      <div class="acc-body">
+        <div class="acc-content">
+          <p class="acc-desc">Escalamos negócios com performance sustentável. Não é crescimento de um mês — é estrutura para crescer de forma consistente, previsível e segura ao longo do tempo.</p>
+          <span class="acc-tag">Escala sustentável</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROCESSO ── -->
+<section class="section rv" id="processo">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:3rem;align-items:end">
+    <div>
+      <div class="s-tag">Como trabalhamos</div>
+      <h2 class="s-h">Processo feito<br><span class="dim">para não errar</span></h2>
+    </div>
+    <p class="s-sub">Cada etapa elimina desperdício e maximiza o retorno do seu investimento.</p>
+  </div>
+  <div class="process">
+    <div class="proc"><div class="proc-n">01</div><div class="proc-t">Diagnóstico & Alinhamento</div><p class="proc-d">Mapeamos seu funil atual, entendemos o negócio e identificamos os gargalos que travam o crescimento.</p></div>
+    <div class="proc"><div class="proc-n">02</div><div class="proc-t">Estratégia com Direção</div><p class="proc-d">Montamos o plano com prioridades claras, metas definidas e canais selecionados com precisão.</p></div>
+    <div class="proc"><div class="proc-n">03</div><div class="proc-t">Execução & Performance</div><p class="proc-d">Campanhas no ar com acompanhamento diário. Otimizamos para extrair o máximo de cada real investido.</p></div>
+    <div class="proc"><div class="proc-n">04</div><div class="proc-t">Dados & Escalada</div><p class="proc-d">Relatórios transparentes, decisões em dados e escala estruturada para crescimento sustentável.</p></div>
+  </div>
+</section>
+
+<!-- ── DEPOIMENTOS ── -->
+<section class="section dark rv" id="resultados">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;margin-bottom:3rem;flex-wrap:wrap">
+    <div>
+      <div class="s-tag">Clientes</div>
+      <h2 class="s-h">Resultados que<br><span class="dim">falam por si</span></h2>
+    </div>
+    <div class="car-nav">
+      <button class="car-nbtn" id="dp" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="car-dots2" id="dd"></div>
+      <button class="car-nbtn" id="dn" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
+  </div>
+  <div class="dep-outer">
+    <div class="dep-track" id="dT">
+      <div class="dep-slide">
+        <div class="dep-card">
+          <div>
+            <div class="dep-q">"</div>
+            <p class="dep-text">Em 3 meses com a Mira G, nosso <strong>custo por lead caiu 40%</strong> e o volume de vendas dobrou. É exatamente o que prometem: direção, foco e resultado.</p>
+            <div class="dep-author"><div class="dep-av">RL</div><div><div class="dep-name">Rafael Lima</div><div class="dep-role">CEO · E-commerce de moda</div></div></div>
+          </div>
+          <div class="dep-stat"><div class="dep-stat-v">-40%</div><div class="dep-stat-l">Custo por lead</div><p class="dep-stat-ctx">Resultado alcançado em 3 meses de campanha otimizada</p></div>
+        </div>
+      </div>
+      <div class="dep-slide">
+        <div class="dep-card">
+          <div>
+            <div class="dep-q">"</div>
+            <p class="dep-text">O diferencial não é só o tráfego. É a <strong>visão estratégica que trazem</strong>. Finalmente tenho uma agência que entende de negócio, não só de anúncio.</p>
+            <div class="dep-author"><div class="dep-av">CM</div><div><div class="dep-name">Camila Mendes</div><div class="dep-role">Fundadora · Clínica estética</div></div></div>
+          </div>
+          <div class="dep-stat"><div class="dep-stat-v">+2x</div><div class="dep-stat-l">Agendamentos</div><p class="dep-stat-ctx">Dobrou o volume mensal mantendo o custo por aquisição estável</p></div>
+        </div>
+      </div>
+      <div class="dep-slide">
+        <div class="dep-card">
+          <div>
+            <div class="dep-q">"</div>
+            <p class="dep-text">Saímos de R$80k para <strong>R$300k de faturamento mensal</strong> em menos de um ano. A Mira G não é agência — é parceira de crescimento de verdade.</p>
+            <div class="dep-author"><div class="dep-av">PT</div><div><div class="dep-name">Pedro Tavares</div><div class="dep-role">Diretor · SaaS B2B</div></div></div>
+          </div>
+          <div class="dep-stat"><div class="dep-stat-v">R$300k</div><div class="dep-stat-l">Faturamento/mês</div><p class="dep-stat-ctx">Crescimento de 275% no faturamento em menos de 12 meses</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-section rv">
+  <div class="cta-label"><span style="width:18px;height:1px;background:#FF6A00;display:inline-block;vertical-align:middle"></span>Próximo passo<span style="width:18px;height:1px;background:#FF6A00;display:inline-block;vertical-align:middle"></span></div>
+  <h2 class="cta-h">
+    Seu negócio<br>
+    <span class="dim">merece o</span><br>
+    <span style="color:#FF6A00">próximo nível.</span>
+  </h2>
+  <div class="cta-btns">
+    <a href="https://wa.me/5511999999999?text=Olá!%20Quero%20crescer%20meu%20negócio%20com%20a%20Mira%20G!" target="_blank" class="btn-primary" style="padding:1rem 2.5rem;font-size:.85rem">
+      Quero crescer agora
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="#contato" class="btn-outline" style="padding:1rem 2rem;font-size:.85rem">
+      Enviar mensagem
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- ── FORMULÁRIO ── -->
+<section class="contact rv" id="contato">
+  <div class="contact-inner">
+    <div>
+      <div class="s-tag">Contato</div>
+      <h2 class="contact-title">Fale com um<br><span style="color:#FF6A00">especialista</span></h2>
+      <p class="contact-sub">Preencha o formulário. Entraremos em contato em até 24 horas úteis. Sem enrolação, sem promessa vazia.</p>
+      <div class="contact-info">
+        <div class="ci"><div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.07 12a19.79 19.79 0 01-3.07-8.67A2 2 0 013 1.18h3a2 2 0 012 1.72 12.05 12.05 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.05 12.05 0 002.81.7A2 2 0 0122 16.92z"/></svg></div><span class="ci-text">+55 (11) 99999-9999</span></div>
+        <div class="ci"><div class="ci-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><span class="ci-text">contato@mirag.com.br</span></div>
+        <div class="ci"><div class="ci-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><span class="ci-text">Resposta em até 24h úteis</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="form-stack" id="fForm">
+        <div class="form-row">
+          <div class="field"><label class="field-label">Nome</label><input class="field-input" id="fn" type="text" placeholder="Seu nome completo"/></div>
+          <div class="field"><label class="field-label">Empresa</label><input class="field-input" id="fe" type="text" placeholder="Nome da empresa"/></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label class="field-label">E-mail</label><input class="field-input" id="fm" type="email" placeholder="seu@email.com"/></div>
+          <div class="field"><label class="field-label">WhatsApp</label><input class="field-input" id="fw" type="tel" placeholder="(11) 99999-9999"/></div>
+        </div>
+        <div class="field">
+          <label class="field-label">Serviço de interesse</label>
+          <select class="field-select" id="fs"><option value="" disabled selected>Selecione uma opção</option><option>Tráfego Pago</option><option>Estratégia de Growth</option><option>Gestão de Redes Sociais</option><option>Copywriting & Criativos</option><option>Analytics & BI</option><option>Consultoria Estratégica</option><option>Diagnóstico completo</option></select>
+        </div>
+        <div class="field"><label class="field-label">Mensagem</label><textarea class="field-ta" id="ft" placeholder="Conte sobre seu negócio e objetivos..."></textarea></div>
+        <button class="form-btn" id="fBtn" onclick="enviar()" type="button">
+          <span>Enviar mensagem</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+      <div class="form-success" id="fOk">✓ Mensagem enviada com sucesso!<br><span style="font-size:.8rem;font-weight:400;opacity:.75">Um especialista da Mira G entrará em contato em breve.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-brand">mira <em>G</em></div>
+  <div class="footer-tag">Direção <span>·</span> Foco <span>·</span> Resultado</div>
+  <div style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#272727">© 2025 Mira G</div>
+</footer>
+
+<script>
+// CURSOR
+const C=document.getElementById('cur'),O=document.getElementById('cur-o');
+let mx=0,my=0,ox=0,oy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;C.style.left=mx+'px';C.style.top=my+'px'});
+(function loop(){ox+=(mx-ox)*.11;oy+=(my-oy)*.11;O.style.left=ox+'px';O.style.top=oy+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));
+});
+
+// NAV
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('stuck',scrollY>50));
+
+// REVEAL
+const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');ro.unobserve(e.target)}}),{threshold:.06});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+
+// CAROUSEL
+function makeCarousel(trackId,prevId,nextId,dotsId,perViewDesktop){
+  const track=document.getElementById(trackId);
+  if(!track)return;
+  const slides=Array.from(track.children);
+  const N=slides.length;
+  let cur=0;
+  const dotsEl=document.getElementById(dotsId);
+
+  function pv(){return window.innerWidth<=768?1:perViewDesktop}
+
+  function buildDots(){
+    if(!dotsEl)return;
+    dotsEl.innerHTML='';
+    const pages=Math.ceil(N/pv());
+    for(let i=0;i<pages;i++){
+      const d=document.createElement('div');
+      d.className='cdot'+(i===0?' on':'');
+      d.onclick=()=>go(i);
+      dotsEl.appendChild(d);
+    }
+  }
+
+  function setWidths(){
+    const w=(100/pv())+'%';
+    slides.forEach(s=>s.style.width=w);
+  }
+
+  function go(i){
+    const pages=Math.ceil(N/pv());
+    cur=((i%pages)+pages)%pages;
+    track.style.transform=`translateX(-${cur*(100/pv()*pv())/pv()*pv()}%)`;
+    // simpler:
+    track.style.transform=`translateX(-${cur*(100)}%)`;
+    if(dotsEl) dotsEl.querySelectorAll('.cdot').forEach((d,j)=>d.classList.toggle('on',j===cur));
+  }
+
+  if(prevId) document.getElementById(prevId).onclick=()=>go(cur-1);
+  if(nextId) document.getElementById(nextId).onclick=()=>go(cur+1);
+
+  window.addEventListener('resize',()=>{cur=0;setWidths();buildDots();go(0)});
+  setWidths();
+  buildDots();
+
+  // auto-advance
+  setInterval(()=>go(cur+1), trackId==='sT'?5000:6000);
+}
+
+makeCarousel('sT','sp','sn','sd',3);
+makeCarousel('dT','dp','dn','dd',1);
+
+// FORM
+function enviar(){
+  const n=document.getElementById('fn'),m=document.getElementById('fm');
+  if(!n.value.trim()){n.focus();n.style.color='#FF6A00';n.placeholder='Campo obrigatório';return}
+  if(!m.value.includes('@')){m.focus();m.style.color='#FF6A00';m.placeholder='E-mail inválido';return}
+  const btn=document.getElementById('fBtn');
+  btn.disabled=true;
+  btn.querySelector('span').textContent='Enviando...';
+  setTimeout(()=>{
+    document.getElementById('fForm').style.display='none';
+    document.getElementById('fOk').style.display='block';
+  },900);
+}
+
+// ACCORDION
+function toggleAcc(header){
+  const item=header.parentElement;
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.acc-item').forEach(i=>i.classList.remove('open'));
+  if(!isOpen)item.classList.add('open');
+}
+
+// SMOOTH SCROLL
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}
+  });
+});
+</script>
+</body>
+</html>
